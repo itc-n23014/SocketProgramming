@@ -3,7 +3,7 @@
 import socket
 
 # IPアドレスとポート番号を定義
-ip = '127.0.0.1'
+ip = input('IPアドレスを入力してください: ')
 port = 80
 
 def send_msg(sock, msg):
