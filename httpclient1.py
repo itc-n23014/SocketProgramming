@@ -21,7 +21,7 @@ def recv_msg(sock, chunk_len=1024):
 
 def main():
     ip = input('IPアドレスを入力してください: ')
-    port = 80
+    port = 80 #http通信なので、80番を使用
     print(f'{ip}のサーバーへ{port}番ポートでアクセスします。')
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((ip, port))
