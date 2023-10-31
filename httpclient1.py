@@ -2,9 +2,6 @@
 
 import socket
 
-# IPアドレスとポート番号を定義
-ip = input('IPアドレスを入力してください: ')
-port = 80
 
 def send_msg(sock, msg):
     total_sent_len = 0
@@ -23,6 +20,9 @@ def recv_msg(sock, chunk_len=1024):
         yield received_chunk
 
 def main():
+    ip = input('IPアドレスを入力してください: ')
+    port = 80
+    print(f'{ip}のサーバーへ{port}番ポートでアクセスします。')
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((ip, port))
     request_text = 'GET / HTTP/1.0\r\n\r\n'
