@@ -2,6 +2,9 @@
 
 import socket
 
+# IPアドレスとポート番号を定義
+ip = '127.0.0.1'
+port = 80
 
 def send_msg(sock, msg):
     total_sent_len = 0
@@ -12,7 +15,6 @@ def send_msg(sock, msg):
             raise RuntimeError('socket connection broken')
         total_sent_len += sent_len
 
-
 def recv_msg(sock, chunk_len=1024):
     while True:
         received_chunk = sock.recv(chunk_len)
@@ -20,10 +22,9 @@ def recv_msg(sock, chunk_len=1024):
             break
         yield received_chunk
 
-
 def main():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('127.0.0.1', 80))
+    client_socket.connect((ip, port))
     request_text = 'GET / HTTP/1.0\r\n\r\n'
     request_bytes = request_text.encode('ASCII')
     send_msg(client_socket, request_bytes)
@@ -32,6 +33,6 @@ def main():
     print(received_text)
     client_socket.close()
 
-
 if __name__ == '__main__':
     main()
+
