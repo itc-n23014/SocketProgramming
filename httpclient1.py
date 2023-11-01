@@ -21,9 +21,7 @@ def recv_msg(sock, chunk_len=1024):
         yield received_chunk
 
 
-def main():
-    IP, PORT = input().split(':')  # IPアドレスとポート番号を取得
-    PORT = int(PORT)
+def main(IP,PORT):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((IP, PORT))
     request_text = 'GET / HTTP/1.0\r\n\r\n'
@@ -36,5 +34,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    IP, PORT = input().split(':')
+    main(IP, int(PORT))
 
