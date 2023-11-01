@@ -12,6 +12,7 @@ def send_msg(sock, msg):
             raise RuntimeError('socket connection broken')
         total_sent_len += sent_len
 
+
 def recv_msg(sock, chunk_len=1024):
     while True:
         received_chunk = sock.recv(chunk_len)
@@ -19,12 +20,12 @@ def recv_msg(sock, chunk_len=1024):
             break
         yield received_chunk
 
+
 def main():
-    ip = input('IPアドレスを入力してください: ')
-    port = 80 #http通信なので、80番を使用
-    print(f'{ip}のサーバーへ{port}番ポートでアクセスします。')
+    IP, PORT = input().split(':')  # IPアドレスとポート番号を取得
+    PORT = int(PORT)
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((ip, port))
+    client_socket.connect((IP, PORT))
     request_text = 'GET / HTTP/1.0\r\n\r\n'
     request_bytes = request_text.encode('ASCII')
     send_msg(client_socket, request_bytes)
@@ -32,6 +33,7 @@ def main():
     received_text = received_bytes.decode('ASCII')
     print(received_text)
     client_socket.close()
+
 
 if __name__ == '__main__':
     main()
