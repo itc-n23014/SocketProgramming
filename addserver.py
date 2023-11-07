@@ -47,5 +47,5 @@ def main(IP,PORT):
 
 
 if __name__ == '__main__':
-    IP,PORT = input().split(':')
+    IP,PORT = input('IPアドレスとポート番号を指定してください(コロン区切り): ').split(':')
     main(IP,int(PORT))

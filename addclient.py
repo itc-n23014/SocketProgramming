@@ -40,7 +40,7 @@ def main(IP,PORT,o1,o2):
 
 
 if __name__ == '__main__':
-    IP,PORT = input('IPアドレスとポート番号を指定してください(IP:ポート番号): ').split(":")
+    IP,PORT = input('IPアドレスとポート番号を指定してください(コロン区切り): ').split(":")
     o1,o2 = map(int,input('2つの数字をスペース区切りで入力してください: ').split())
     main(IP,int(PORT),o1,o2)
 
