@@ -19,8 +19,12 @@ def receiving(sock):
 def main(host,port):
     with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
         s.connect((host,port))
-        request = 'GET / HTTP/1.1\r\n\r\n'.encode('utf-8')
-        sending(s,request)
+        request = "GET / HTTP/1.1\r\n"
+        + f'Host: {host}:{port}\r\n'
+        + 'User-Agent: curl/7.68.0\r\n'
+        + 'Accept: */*\r\n\r\n'
+        request_byte = request.encode('utf-8')
+        sending(s,request_byte)
         received = b''.join(receiving(s))
         received_txt = received.decode('utf-8')
         print(received_txt)
