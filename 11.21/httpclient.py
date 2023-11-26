@@ -1,34 +1,35 @@
 import socket
 
-def sending(sock,msg):
-    total = 0
-    msg_len = len(msg)
-    while total < msg_len:
-        sent_len = sock.send(msg[total:])
-        if sent_len == 0:
-            raise RuntimeError('socket sonnection broken')
-        total += sent_len
+HOST = input('IPアドレスかドメイン名を入力してください: ')
+PORT = int(input('ポート番号を指定してください: '))
+print(f"{HOST}へ{PORT}番ポートで接続します...")
+HOST = socket.gethostbyname(HOST)
 
-def receiving(sock):
+def sending(s, msg):
+    total = 0
+    while total < len(msg):
+        sent = s.send(msg[total:])
+        if sent == 0:
+            raise RuntimeError('socket connection broken')
+        total += sent
+
+def receiving(s):
     while True:
-        received = sock.recv(1024)
-        if len(received) == 0:
+        received = s.recv(1024)
+        if not received:
             break
         yield received
 
-def main(host,port):
-    with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-        s.connect((host,port))
-        request = "GET / HTTP/1.1\r\n"
-        + f'Host: {host}:{port}\r\n'
-        + 'User-Agent: curl/7.68.0\r\n'
-        + 'Accept: */*\r\n\r\n'
-        request_byte = request.encode('utf-8')
-        sending(s,request_byte)
-        received = b''.join(receiving(s))
-        received_txt = received.decode('utf-8')
+def main(HOST, PORT):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        request = ('GET / HTTP/1.1\r\n'
+                   + f'Host: {HOST}\r\n\r\n')
+        sending(s, request.encode('utf-8'))
+        received_bytes = b''.join(receiving(s))
+        received_txt = received_bytes.decode('utf-8')
         print(received_txt)
 
 if __name__ == '__main__':
-    host,port = input().split(':')
-    main(host,int(port))
+    main(HOST, PORT)
+
