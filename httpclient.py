@@ -1,36 +1,33 @@
-#!/usr/bin/env python3
-
 import socket
 
-
-def send_msg(sock, msg):
-    total_sent_len = 0
-    total_msg_len = len(msg)
-    while total_sent_len < total_msg_len:
-        sent_len = sock.send(msg[total_sent_len:])
-        if sent_len == 0:
+def send_msg(s, msg):
+    total = 0
+    while total < len(msg):
+        sent = s.send(msg[total:])
+        if sent == 0:
             raise RuntimeError('socket connection broken')
-        total_sent_len += sent_len
+        total += sent
 
-def recv_msg(sock, chunk_len=1024):
+def recv_msg(s, chunk_len=1024):
     while True:
-        received_chunk = sock.recv(chunk_len)
+        received_chunk = s.recv(chunk_len)
         if len(received_chunk) == 0:
             break
         yield received_chunk
 
-def main(IP,PORT):
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((IP, PORT))
-    request_text = 'GET / HTTP/1.0\r\n\r\n'
-    request_bytes = request_text.encode('ASCII')
-    send_msg(client_socket, request_bytes)
-    received_bytes = b''.join(recv_msg(client_socket))
-    received_text = received_bytes.decode('ASCII')
-    print(received_text)
-    client_socket.close()
+def main(HOST, PORT):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, int(PORT)))
+        while True:
+            httprequest = f'GET / HTTP/1.1\r\nHost: {HOST}\r\n\r\n'
+            req_decoded = httprequest.encode('utf-8')
+            send_msg(s, req_decoded)
+            received = b''.join(recv_msg(s))
+            received_txt = received.decode('utf-8')
+            print(received_txt)
 
 if __name__ == '__main__':
-    IP,PORT = input(),int(input())
-    main(IP,PORT)
+    host_port_input = input("Enter HOST:PORT: ")
+    HOST, PORT = host_port_input.split(':')
+    main(HOST, PORT)
 
